@@ -251,6 +251,14 @@ public class PlayerSelection extends JPanel implements ActionListener{
 									players[index] = new ComputerPlayer();
 									players[index].setPlayerName(names[i]);
 									players[index].setPlayerColor(getColor(i));
+									if(AIlvls[i]==1) {
+										ComputerPlayer temp = (ComputerPlayer)players[index];
+										temp.setAI("Random");
+										players[index] = temp;
+									} else {
+										ComputerPlayer temp = (ComputerPlayer)players[index];
+										temp.setAI("SimpleStrategy");
+										players[index] = temp;									}
 									numCpu++;
 								}
 								index++;
