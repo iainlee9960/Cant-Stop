@@ -22,6 +22,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 	String[] names = {"","","",""};
 	int[] AIlvls = {1,1,1,1};
 	boolean[] changeLvl = {false,false,false,false};
+	CantStopPlayer[] players;
 	Run game;
 
 	Font font = new Font("Copperplate Gothic Bold", Font.BOLD, 55);
@@ -116,7 +117,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 					if (changeLvl[3] == false) {
 						if ((e.getX() <= 1130) && (e.getX() >= 1110)) {
 							if ((e.getY() <= (840 - i/2)) && (e.getY() >= (820 + i/2))) {
-								AIlvls[3]-=1;
+								AIlvls[3]--;
 								changeLvl[3] = true;
 								if (AIlvls[3] >= 3)
 									AIlvls[3] = 3;
@@ -127,7 +128,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 						}
 						if ((e.getX() >= 1155) && (e.getX() <= 1175)) {
 							if ((e.getY() <= 840 - i/2) && (e.getY() >= 820 + i/2)) {
-								AIlvls[3] +=1;
+								AIlvls[3] ++;
 								changeLvl[3] = true;
 								if (AIlvls[3] >= 3)
 									AIlvls[3] = 3;
@@ -143,7 +144,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 					if (changeLvl[2] == false) {
 						if ((e.getX() <= 370) && (e.getX() >= 350)) {
 							if ((e.getY() <= (840 - i/2)) && (e.getY() >= (820 + i/2))) {
-								AIlvls[2] -=1;
+								AIlvls[2] --;
 								changeLvl[2] = true;
 								if (AIlvls[2] >= 3)
 									AIlvls[2] = 3;
@@ -154,7 +155,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 						}
 						if ((e.getX() >= 395) && (e.getX() <= 415)) {
 							if ((e.getY() <= 840 - i/2) && (e.getY() >= 820 + i/2)) {
-								AIlvls[2] +=1;
+								AIlvls[2] ++;
 								changeLvl[2] = true;
 								if (AIlvls[2] >= 3)
 									AIlvls[2] = 3;
@@ -170,7 +171,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 					if (changeLvl[1] == false) {
 						if ((e.getX() <= 1130) && (e.getX() >= 1110)) {
 							if ((e.getY() <= (470 - i/2)) && (e.getY() >= (450 + i/2))) {
-								AIlvls[1] -=1;
+								AIlvls[1] --;
 								changeLvl[1] = true;
 								if (AIlvls[1] >= 3)
 									AIlvls[1] = 3;
@@ -181,7 +182,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 						}
 						if ((e.getX() >= 1155) && (e.getX() <= 1175)) {
 							if ((e.getY() <= 470 - i/2) && (e.getY() >= 450 + i/2)) {
-								AIlvls[1] +=1;
+								AIlvls[1] ++;
 								changeLvl[1] = true;
 								if (AIlvls[1] >= 3)
 									AIlvls[1] = 3;
@@ -197,7 +198,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 					if (changeLvl[0] == false) {
 						if ((e.getX() <= 370) && (e.getX() >= 350)) {
 							if ((e.getY() <= (470 - i/2)) && (e.getY() >= (450 + i/2))) {
-								AIlvls[0] -=1;
+								AIlvls[0] --;
 								changeLvl[0] = true;
 								if (AIlvls[0] >= 3)
 									AIlvls[0] = 3;
@@ -208,7 +209,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 						}
 						if ((e.getX() >= 395) && (e.getX() <= 415)) {
 							if ((e.getY() <= 470 - i/2) && (e.getY() >= 450 + i/2)) {
-								AIlvls[0] +=1;
+								AIlvls[0] ++;
 								changeLvl[0] = true;
 								if (AIlvls[0] >= 3)
 									AIlvls[0] = 3;
@@ -226,23 +227,63 @@ public class PlayerSelection extends JPanel implements ActionListener{
 				
 				if ((e.getX() >= 690) && (e.getX() <= 850)) {
 					if ((e.getY() >= 810) && (e.getY() <= 870)) {
-						if() {
-							
-							CantStopGame newGame = new CantStopGame();
-							CantStopGameScreen GameScreen= new CantStopGameScreen(false,);
-							game.frame.getContentPane().removeAll();
-							game.frame.getContentPane().add(GameScreen);
-							game.frame.revalidate();
+						int numPlayers = 0, numCpu = 0, numHuman = 0;
+						for(int i=0;i<4;i++) {
+							names[i] = textFields[i].getText();
+							if(area[i]!=3 && area[i]!=0) {
+								numPlayers++;
+							}
 						}
-						for(String n:names) {
-							System.out.println(n);
+						if(numPlayers>1) {
+							players = new CantStopPlayer[numPlayers];
+							int index = 0;
+							for(int i=0;i<4;i++) {
+								if(area[i]==3) {
+									index--;
+								}
+								if(area[i]==1) {
+									players[index] = new HumanPlayer();
+									players[index].setPlayerName(names[i]);
+									players[index].setPlayerColor(getColor(i));
+									numHuman++;
+								}
+								if(area[i]==2) {
+									players[index] = new ComputerPlayer();
+									players[index].setPlayerName(names[i]);
+									players[index].setPlayerColor(getColor(i));
+									numCpu++;
+								}
+								index++;
+							}
+							if(numHuman==0) {
+								int[] lvls = new int[numPlayers];
+								String[] CpuNames = new String[numPlayers];
+								Color[] CpuColors = new Color[numPlayers];
+								index = 0;
+								for(int i=0;i<4;i++) {
+									if(area[i]==3) {
+										index--;
+									}
+									if(area[i]==2) {
+										lvls[index] = AIlvls[i];
+										CpuNames[index] = names[i];
+										CpuColors[index] = getColor(i);
+									}
+									index++;
+								}
+								game.frame.getContentPane().removeAll();
+								AiCompScreen aiHoldScreen = new AiCompScreen(game,lvls,CpuNames, CpuColors);
+								aiHoldScreen.setBackground(Color.red);	
+								game.frame.getContentPane().add(aiHoldScreen);
+								game.frame.revalidate();
+							} else {
+								CantStopGame newGame = new CantStopGame(players);
+								CantStopGameScreen GameScreen= new CantStopGameScreen(false, newGame);
+								game.frame.getContentPane().removeAll();
+								game.frame.getContentPane().add(GameScreen);
+								game.frame.revalidate();
+							}
 						}
-						game.frame.getContentPane().removeAll();
-						AiCompScreen aiHoldScreen = new AiCompScreen(game,AIlvls,names);
-						aiHoldScreen.setBackground(Color.red);	
-						game.frame.getContentPane().add(aiHoldScreen);
-						game.frame.revalidate();
-
 					}
 				}
 				if ((e.getX() >= 20) && (e.getX() <= 120)) {
@@ -256,7 +297,15 @@ public class PlayerSelection extends JPanel implements ActionListener{
 			}
 		});
 	}
-	
+	public Color getColor(int num) {
+		switch(num) {
+		case 0: return Color.yellow;
+		case 1: return new Color(51, 255, 255);
+		case 2: return Color.green;
+		case 3: return Color.orange;
+		default: return Color.white;
+		}	
+	}
 	public void paintComponent(Graphics g) {
 		for(int i=0; i<4; i++) {
 			switch(i) {
@@ -265,9 +314,9 @@ public class PlayerSelection extends JPanel implements ActionListener{
 			case 2: textFields[i].setBounds(160,540,400,70); break;
 			case 3: textFields[i].setBounds(920,540,400,70); break;
 			}
-			if (textFields[i].getText().length() == 9) {
+			if (textFields[i].getText().length() <= 9) {
 				names[i] = textFields[i].getText();
-			} else if (textFields[0].getText().length() > 9) {
+			} else if (textFields[i].getText().length() > 9) {
 				textFields[i].setText(names[i]);
 			}
 		}
@@ -475,20 +524,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
         }
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==textFields[0]){
-        	names[0] = textFields[0].getText();
-        }
-		if(e.getSource()==textFields[1]){
-        	names[1] = textFields[1].getText();
-        }
-		if(e.getSource()==textFields[2]){
-        	names[2] = textFields[2].getText();
-        }
-		if(e.getSource()==textFields[3]){
-        	names[3] = textFields[3].getText();
-        }       
-	}
+	public void actionPerformed(ActionEvent e) {}
 }
 
 

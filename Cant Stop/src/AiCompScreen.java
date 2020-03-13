@@ -19,7 +19,7 @@ public class AiCompScreen extends JPanel implements ActionListener {
 
 	int[] aiTypes;
 	String[] aiNames;
-	Color[] aiColors = { Color.YELLOW, new Color(51, 255, 255), Color.GREEN, Color.ORANGE, Color.BLACK };
+	Color[] aiColors;
 	int[] currentRunWins = { 1, 6, 2, 3 };
 	int numAi;
 
@@ -34,10 +34,11 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	JFormattedTextField textField = new JFormattedTextField("");
 	Run game;
 
-	public AiCompScreen(Run game, int[] aiDiffTypes, String[] aiGivenNames) {
+	public AiCompScreen(Run game, int[] aiDiffTypes, String[] aiGivenNames, Color[] aiColors) {
 		this.game = game;
 		aiTypes = aiDiffTypes;
 		aiNames = aiGivenNames;
+		this.aiColors = aiColors;
 		if (aiTypes.length == aiNames.length)
 			numAi = aiTypes.length;
 		else
@@ -55,7 +56,7 @@ public class AiCompScreen extends JPanel implements ActionListener {
 			public void keyPressed(KeyEvent ke) {
 				String value = textField.getText();
 				int l = value.length();
-				if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
+				if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' || ke.getKeyChar() == (char)8) {
 					textField.setEditable(true);
 				} else {
 					textField.setEditable(false);

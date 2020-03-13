@@ -182,7 +182,7 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		g.drawRect(20, 20, 150, 90);
 
 		g2d.drawString("QUIT", 47, 73);
-		Image grid = new ImageIcon("Cant Stop/src/grid.png").getImage();
+		Image grid = new ImageIcon("images/grid.png").getImage();
 
 		g.setColor(Color.BLUE); // THE COLOR OF THE PLAYER WHO IS GOING AT THE MOMENT
 		g.fillRect(1100, 150, 400, 90);
@@ -386,12 +386,12 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		return g;
 	}
 	private void drawDice(Graphics g) {
-		Image d1 = new ImageIcon("src/die1.gif").getImage();
-		Image d2 = new ImageIcon("src/die2.gif").getImage();
-		Image d3 = new ImageIcon("src/die3.gif").getImage();
-		Image d4 = new ImageIcon("src/die4.gif").getImage();
-		Image d5 = new ImageIcon("src/die5.gif").getImage();
-		Image d6 = new ImageIcon("src/die6.gif").getImage();
+		Image d1 = new ImageIcon("images/die1.gif").getImage();
+		Image d2 = new ImageIcon("images/die2.gif").getImage();
+		Image d3 = new ImageIcon("images/die3.gif").getImage();
+		Image d4 = new ImageIcon("images/die4.gif").getImage();
+		Image d5 = new ImageIcon("images/die5.gif").getImage();
+		Image d6 = new ImageIcon("images/die6.gif").getImage();
 		int initial = 1125;
 
 		int[] ayo = { 4, 2, 3, 6 };
