@@ -280,9 +280,15 @@ public class PlayerSelection extends JPanel implements ActionListener{
 									index++;
 								}
 								game.frame.getContentPane().removeAll();
-								AiCompScreen aiHoldScreen = new AiCompScreen(game,lvls,CpuNames, CpuColors);
+								AiCompScreen aiHoldScreen = new AiCompScreen(game, lvls, CpuNames, CpuColors, players);
 								aiHoldScreen.setBackground(Color.red);	
 								game.frame.getContentPane().add(aiHoldScreen);
+								game.frame.revalidate();
+							} else if(numCpu>0){
+								CantStopGame newGame = new CantStopGame(players);
+								CantStopGameScreen GameScreen= new CantStopGameScreen(true, newGame);
+								game.frame.getContentPane().removeAll();
+								game.frame.getContentPane().add(GameScreen);
 								game.frame.revalidate();
 							} else {
 								CantStopGame newGame = new CantStopGame(players);
