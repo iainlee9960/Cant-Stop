@@ -2,7 +2,7 @@
 public class CantStopGame {
 	private CantStopPlayer[] playerOrder;
 	private int currentPlayerIndex;
-	private CantStopPlayer[] completedColumns;
+	private CantStopPlayer[] completedColumns = new CantStopPlayer[] {null, null, null, null, null, null, null, null, null, null, null};
 	public final static int[] LENGTHS = { 3, 5, 7, 9, 11, 13, 11, 9, 7, 5, 3 };
 	int[] dice;
 	int[][] choices;
@@ -22,11 +22,13 @@ public class CantStopGame {
 			p.setRecord();
 		}
 	}
-	public CantStopGame(CantStopPlayer[] players, CantStopPlayer currentPlayer, int[][] locationOfAllPiecies,
-			int[] locationOfNeutralMarkers, int numNeutralLeft, CantStopPlayer[] completedCols) {
-
-		//needs to be done still
-
+	public CantStopGame(CantStopPlayer[] playerOrder, int currentPlayerIndex, CantStopPlayer[] completedColumns) {
+		this.playerOrder = playerOrder;
+		this.currentPlayerIndex = currentPlayerIndex;
+		this.completedColumns = completedColumns;
+	}
+	public void runGame() {
+		
 	}
 	public CantStopPlayer[] getPlayerOrder() {
 		return playerOrder;
@@ -52,17 +54,32 @@ public class CantStopGame {
 	}
 	public void columnCompleted(int colNum) {
 		completedColumns[colNum] = playerOrder[currentPlayerIndex];
-		playerOrder[currentPlayerIndex].addCompleted();
 		for(CantStopPlayer player : playerOrder) {
 			if(player != playerOrder[currentPlayerIndex]) {
-				for(int i = 0; i < player.getRecord().getPieceLocations().length; i++) 
-				{
-					player.getRecord().getPieceLocations()[colNum] = 0;
+				for(int i = 0; i < player.getRecord().getPieceLocations().length; i++) {
+					player.getRecord().getPieceLocations()[colNum] = (Integer) null;
 				}
 			}
 		}
 	}
-
+	public CantStopPlayer getWinner () {
+		return checkGameOver();
+	}
+	public CantStopPlayer checkGameOver () {
+		int cols = 0;
+		for (int i=0; i<playerOrder.length; i++) {
+			for (int j=0; j<completedColumns.length; j++) {
+				if (completedColumns[j] == playerOrder[i]) {
+					cols++;
+				}
+				if (cols>=3) {
+					return playerOrder[i];
+				}
+			}
+			cols = 0;
+		}
+		return null;
+	}
 
 	public void resetForNewTurn() {
 		currentPlayerIndex++;
@@ -82,7 +99,7 @@ public class CantStopGame {
 	public int[][] generateChoices(int[] rolledDice) {
 		int[][] returnVal = new int[6][];
 		int current = 0;
-		
+
 		for (int y = 1; y < 4; y++) {
 			int sum = rolledDice[0] + rolledDice[y];
 			int sum2 = rolledDice[3] + rolledDice[3 - y];
@@ -133,7 +150,7 @@ public class CantStopGame {
 				current++;
 			}
 		}
-//		add to new array of correct size
+		//		add to new array of correct size
 		int length = 0;
 		if(returnVal[0]==null) {
 			int[][] noChoices = new int[1][];
@@ -149,12 +166,12 @@ public class CantStopGame {
 			choices[i] = returnVal[i];
 		}
 
-//		remove duplicates
+		//		remove duplicates
 		int[][] finalArray = removeDuplicates(choices);
 		return finalArray;
 	}
 
-	public boolean canPlace(int sum) {
+	private boolean canPlace(int sum) {
 		if (playerOrder[currentPlayerIndex].getRecord().getNumNeutralLeft() < 3) {
 			for (int index : playerOrder[currentPlayerIndex].getRecord().getNeutralMarkerLocations()) {
 				if (index == sum) {
@@ -173,7 +190,7 @@ public class CantStopGame {
 		}
 		return true;
 	}
-	public static int[][] removeDuplicates(int[][] arr) {
+	private static int[][] removeDuplicates(int[][] arr) {
 		int end = arr.length;
 		for (int i = 0; i < end; i++) {
 			for (int j = i + 1; j < end; j++) {
@@ -258,25 +275,25 @@ public class CantStopGame {
 
 	}
 	public void placeNeutralMarker (int col) {
-		//Takes a neutral marker away from the current player, and updates the neutral markers array. 
-		//If there is one of the player’s permanent markers in the column but no neutral marker, place the neutral marker one above that. 
-		//If there is currently a neutral marker in the column, remove it and place a neutral marker one above it. 
-		//If there are no neutral markers in the column and none of the player’s pieces, place it at index 0.
-		//CantStopPlayer[] players, CantStopPlayer currentPlayer, int[][] locationOfAllPiecies,
-		//int[] locationOfNeutralMarkers, int numNeutralLeft, CantStopPlayer[] completedCols
-		boolean update;
-		int  x= currentPlayer.getPieceLocations();
-		if(numNeutralLeft>0) {
-			
-			if(locationOfNeutralMarkers[col] == 0 && ) {
-				locationOfNeutralMarkers[col]=1;
-			}else if(locationOfNeutralMarkers[col]==) {
 
+		PlayerRecord record = playerOrder[currentPlayerIndex].getRecord();
+		CantStopPlayer player = playerOrder[currentPlayerIndex];
+		int numNeutralLeft = record.getNumNeutralLeft();
+		int[] neutralLocations = record.getNeutralMarkerLocations();
+		int[] pieceLocations = record.getPieceLocations();
+
+		if(numNeutralLeft>0 && neutralLocations[col]<LENGTHS[col] && completedColumns[col]!=player) {
+			if(neutralLocations[col] == 0 && pieceLocations[col]==0) {
+				neutralLocations[col]=1;
+			}else if(neutralLocations[col]!=0) {
+				neutralLocations[col] =+ 1;
+			}else if(neutralLocations[col]==0 && pieceLocations[col]!=0) {
+				neutralLocations[col]=pieceLocations[col]+1;
 			}
 			numNeutralLeft = numNeutralLeft -1;
 		}
+		//locationOfNeutralMarkers[col]=neutralLocations[col];
 
-		
 	}
 
 
@@ -292,6 +309,8 @@ public class CantStopGame {
 		}
 	}
 }
+
+
 
 
 

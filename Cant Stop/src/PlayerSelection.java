@@ -17,86 +17,62 @@ public class PlayerSelection extends JPanel implements ActionListener{
 	final int pButtonWidth = 500;
 	final int oButtonHeight = 80;
 	final int oButtonWidth = 140;
-	static int area1 = 0;
-	static int area2 = 0;
-	static int area3 = 0;
-	static int area4 = 0;
-	String name1 = "";
-	String name2 = "";
-	String name3 = "";
-	String name4 = "";
-	int AI1lvl = 1;
-	int AI2lvl = 1;
-	int AI3lvl = 1;
-	int AI4lvl = 1;
-	boolean changelvl1 = false;
-	boolean changelvl2 = false;
-	boolean changelvl3 = false;
-	boolean changelvl4 = false;
+	
+	int[] area = {0,0,0,0};
+	String[] names = {"","","",""};
+	int[] AIlvls = {1,1,1,1};
+	boolean[] changeLvl = {false,false,false,false};
 	Run game;
 
 	Font font = new Font("Copperplate Gothic Bold", Font.BOLD, 55);
-	JFormattedTextField textField = new JFormattedTextField("Player1");
-	JFormattedTextField textField1 = new JFormattedTextField("Player2");
-	JFormattedTextField textField2 = new JFormattedTextField("Player3");
-	JFormattedTextField textField3 = new JFormattedTextField("Player4");
+	JFormattedTextField[] textFields = {new JFormattedTextField("Player1"), new JFormattedTextField("Player2"), new JFormattedTextField("Player3"), new JFormattedTextField("Player4")};
+
 	
 	PlayerSelection(Run game){
 		setBackground(Color.RED);
 		setVisible(true);
-		textField.addActionListener(this);
-		textField.setOpaque(false);
-		textField.setBorder(null);
-		textField.setFont(font);
-		add(textField);
-		textField1.addActionListener(this);
-		textField1.setOpaque(false);
-		textField1.setBorder(null);
-		textField1.setFont(font);
-		add(textField1);
-		textField2.addActionListener(this);
-		textField2.setOpaque(false);
-		textField2.setBorder(null);
-		textField2.setFont(font);
-		add(textField2);
-		textField3.addActionListener(this);
-		textField3.setOpaque(false);
-		textField3.setBorder(null);
-		textField3.setFont(font);
-		add(textField3);
+		
+		for(JFormattedTextField field: textFields) {
+			field.addActionListener(this);
+			field.setOpaque(false);
+			field.setBorder(null);
+			field.setFont(font);
+			add(field);
+		}
+		
 		this.game = game;
 		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.getY() >= 350 && e.getY() <= 430) {
 					if ((e.getX() >= 150 )&& (e.getX() <= 150 + oButtonWidth)) {
-						area1 = 1;
+						area[0] = 1;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 320 && e.getX() <= 320 + oButtonWidth) {
-						area1 = 2;
+						area[0] = 2;
 						repaint();
 						//add action
 					}
 					if ((e.getX() >= 490) && (e.getX() <= 490 + oButtonWidth)) {
-						area1 = 3;
+						area[0] = 3;
 						repaint();
 						//add action
 					}
 					
 					if ((e.getX() >= 910 )&& (e.getX() <= 910 + oButtonWidth)) {
-						area2 = 1;
+						area[1] = 1;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 1080 && e.getX() <= 1080 + oButtonWidth) {
-						area2 = 2;
+						area[1] = 2;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 1250 && e.getX() <= 1250 + oButtonWidth) {
-						area2 = 3;
+						area[1] = 3;
 						repaint();
 						//add action
 					}
@@ -104,59 +80,59 @@ public class PlayerSelection extends JPanel implements ActionListener{
 				
 				if (e.getY() >= 710 && e.getY() <= 790) {
 					if ((e.getX() >= 150 )&& (e.getX() <= 150 + oButtonWidth)) {
-						area3 = 1;
+						area[2] = 1;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 320 && e.getX() <= 320 + oButtonWidth) {
-						area3 = 2;
+						area[2] = 2;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 490 && e.getX() <= 490 + oButtonWidth) {
-						area3 = 3;
+						area[2] = 3;
 						repaint();
 						//add action
 					}
 					
 					if ((e.getX() >= 910 )&& (e.getX() <= 910 + oButtonWidth)) {
-						area4 = 1;
+						area[3] = 1;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 1080 && e.getX() <= 1080 + oButtonWidth) {
-						area4 = 2;
+						area[3] = 2;
 						repaint();
 						//add action
 					}
 					if (e.getX() >= 1250 && e.getX() <= 1250 + oButtonWidth) {
-						area4 = 3;
+						area[3] = 3;
 						repaint();
 						//add action
 					}
 				}
 				
 				for (int i = 0; i <= 20; i ++) {
-					if (changelvl4 == false) {
+					if (changeLvl[3] == false) {
 						if ((e.getX() <= 1130) && (e.getX() >= 1110)) {
 							if ((e.getY() <= (840 - i/2)) && (e.getY() >= (820 + i/2))) {
-								AI4lvl --;
-								changelvl4 = true;
-								if (AI4lvl >= 3)
-									AI4lvl = 3;
-								if (AI4lvl <= 1) 
-									AI4lvl = 1;
+								AIlvls[3]-=1;
+								changeLvl[3] = true;
+								if (AIlvls[3] >= 3)
+									AIlvls[3] = 3;
+								if (AIlvls[3] <= 1) 
+									AIlvls[3] = 1;
 								repaint();
 							}
 						}
 						if ((e.getX() >= 1155) && (e.getX() <= 1175)) {
 							if ((e.getY() <= 840 - i/2) && (e.getY() >= 820 + i/2)) {
-								AI4lvl ++;
-								changelvl4 = true;
-								if (AI4lvl >= 3)
-									AI4lvl = 3;
-								if (AI4lvl <= 1) 
-									AI4lvl = 1;
+								AIlvls[3] +=1;
+								changeLvl[3] = true;
+								if (AIlvls[3] >= 3)
+									AIlvls[3] = 3;
+								if (AIlvls[3] <= 1) 
+									AIlvls[3] = 1;
 								repaint();
 							}
 						}	
@@ -164,26 +140,26 @@ public class PlayerSelection extends JPanel implements ActionListener{
 				}
 				
 				for (int i = 0; i <= 20; i ++) {
-					if (changelvl3 == false) {
+					if (changeLvl[2] == false) {
 						if ((e.getX() <= 370) && (e.getX() >= 350)) {
 							if ((e.getY() <= (840 - i/2)) && (e.getY() >= (820 + i/2))) {
-								AI3lvl --;
-								changelvl3 = true;
-								if (AI3lvl >= 3)
-									AI3lvl = 3;
-								if (AI3lvl <= 1) 
-									AI3lvl = 1;
+								AIlvls[2] -=1;
+								changeLvl[2] = true;
+								if (AIlvls[2] >= 3)
+									AIlvls[2] = 3;
+								if (AIlvls[2] <= 1) 
+									AIlvls[2] = 1;
 								repaint();
 							}
 						}
 						if ((e.getX() >= 395) && (e.getX() <= 415)) {
 							if ((e.getY() <= 840 - i/2) && (e.getY() >= 820 + i/2)) {
-								AI3lvl ++;
-								changelvl3 = true;
-								if (AI3lvl >= 3)
-									AI3lvl = 3;
-								if (AI3lvl <= 1) 
-									AI3lvl = 1;
+								AIlvls[2] +=1;
+								changeLvl[2] = true;
+								if (AIlvls[2] >= 3)
+									AIlvls[2] = 3;
+								if (AIlvls[2] <= 1) 
+									AIlvls[2] = 1;
 								repaint();
 							}
 						}	
@@ -191,26 +167,26 @@ public class PlayerSelection extends JPanel implements ActionListener{
 				}
 				
 				for (int i = 0; i <= 20; i ++) {
-					if (changelvl2 == false) {
+					if (changeLvl[1] == false) {
 						if ((e.getX() <= 1130) && (e.getX() >= 1110)) {
 							if ((e.getY() <= (470 - i/2)) && (e.getY() >= (450 + i/2))) {
-								AI2lvl --;
-								changelvl2 = true;
-								if (AI2lvl >= 3)
-									AI2lvl = 3;
-								if (AI2lvl <= 1) 
-									AI2lvl = 1;
+								AIlvls[1] -=1;
+								changeLvl[1] = true;
+								if (AIlvls[1] >= 3)
+									AIlvls[1] = 3;
+								if (AIlvls[1] <= 1) 
+									AIlvls[1] = 1;
 								repaint();
 							}
 						}
 						if ((e.getX() >= 1155) && (e.getX() <= 1175)) {
 							if ((e.getY() <= 470 - i/2) && (e.getY() >= 450 + i/2)) {
-								AI2lvl ++;
-								changelvl2 = true;
-								if (AI2lvl >= 3)
-									AI2lvl = 3;
-								if (AI2lvl <= 1) 
-									AI2lvl = 1;
+								AIlvls[1] +=1;
+								changeLvl[1] = true;
+								if (AIlvls[1] >= 3)
+									AIlvls[1] = 3;
+								if (AIlvls[1] <= 1) 
+									AIlvls[1] = 1;
 								repaint();
 							}
 						}	
@@ -218,42 +194,55 @@ public class PlayerSelection extends JPanel implements ActionListener{
 				}
 					
 				for (int i = 0; i <= 20; i ++) {
-					if (changelvl1 == false) {
+					if (changeLvl[0] == false) {
 						if ((e.getX() <= 370) && (e.getX() >= 350)) {
 							if ((e.getY() <= (470 - i/2)) && (e.getY() >= (450 + i/2))) {
-								AI1lvl --;
-								changelvl1 = true;
-								if (AI1lvl >= 3)
-									AI1lvl = 3;
-								if (AI1lvl <= 1) 
-									AI1lvl = 1;
+								AIlvls[0] -=1;
+								changeLvl[0] = true;
+								if (AIlvls[0] >= 3)
+									AIlvls[0] = 3;
+								if (AIlvls[0] <= 1) 
+									AIlvls[0] = 1;
 								repaint();
 							}
 						}
 						if ((e.getX() >= 395) && (e.getX() <= 415)) {
 							if ((e.getY() <= 470 - i/2) && (e.getY() >= 450 + i/2)) {
-								AI1lvl ++;
-								changelvl1 = true;
-								if (AI1lvl >= 3)
-									AI1lvl = 3;
-								if (AI1lvl <= 1) 
-									AI1lvl = 1;
+								AIlvls[0] +=1;
+								changeLvl[0] = true;
+								if (AIlvls[0] >= 3)
+									AIlvls[0] = 3;
+								if (AIlvls[0] <= 1) 
+									AIlvls[0] = 1;
 								repaint();
 							}
 						}	
 					}
 				}
-				changelvl1 = false;
-				changelvl2 = false;
-				changelvl3 = false;
-				changelvl4 = false;
+				changeLvl[0] = false;
+				changeLvl[1] = false;
+				changeLvl[2] = false;
+				changeLvl[3] = false;
 				
 				if ((e.getX() >= 690) && (e.getX() <= 850)) {
 					if ((e.getY() >= 810) && (e.getY() <= 870)) {
-						CantStopGameScreen GameScreen= new CantStopGameScreen();
+						if() {
+							
+							CantStopGame newGame = new CantStopGame();
+							CantStopGameScreen GameScreen= new CantStopGameScreen(false,);
+							game.frame.getContentPane().removeAll();
+							game.frame.getContentPane().add(GameScreen);
+							game.frame.revalidate();
+						}
+						for(String n:names) {
+							System.out.println(n);
+						}
 						game.frame.getContentPane().removeAll();
-						game.frame.getContentPane().add(GameScreen);
+						AiCompScreen aiHoldScreen = new AiCompScreen(game,AIlvls,names);
+						aiHoldScreen.setBackground(Color.red);	
+						game.frame.getContentPane().add(aiHoldScreen);
 						game.frame.revalidate();
+
 					}
 				}
 				if ((e.getX() >= 20) && (e.getX() <= 120)) {
@@ -269,29 +258,18 @@ public class PlayerSelection extends JPanel implements ActionListener{
 	}
 	
 	public void paintComponent(Graphics g) {
-		textField.setBounds(160,180,400,70);
-		if (textField.getText().length() == 9) {
-			name1 = textField.getText();
-		} else if (textField.getText().length() > 9) {
-			textField.setText(name1);
-		}
-		textField1.setBounds(920,180,400,70);
-		if (textField1.getText().length() == 9) {
-			name2 = textField1.getText();
-		} else if (textField1.getText().length() > 9) {
-			textField1.setText(name2);
-		}
-		textField2.setBounds(160,540,400,70);
-		if (textField2.getText().length() == 9) {
-			name3 = textField2.getText();
-		} else if (textField2.getText().length() > 9) {
-			textField2.setText(name3);
-		}
-		textField3.setBounds(920,540,400,70);
-		if (textField3.getText().length() == 9) {
-			name4 = textField3.getText();
-		} else if (textField3.getText().length() > 9) {
-			textField3.setText(name4);
+		for(int i=0; i<4; i++) {
+			switch(i) {
+			case 0: textFields[i].setBounds(160,180,400,70); break;
+			case 1: textFields[i].setBounds(920,180,400,70); break;
+			case 2: textFields[i].setBounds(160,540,400,70); break;
+			case 3: textFields[i].setBounds(920,540,400,70); break;
+			}
+			if (textFields[i].getText().length() == 9) {
+				names[i] = textFields[i].getText();
+			} else if (textFields[0].getText().length() > 9) {
+				textFields[i].setText(names[i]);
+			}
 		}
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -334,38 +312,38 @@ public class PlayerSelection extends JPanel implements ActionListener{
 		g.setColor(Color.gray);
 		g.fillRect(25,15,100,40);
 		
-		if (area1 == 1) {
+		if (area[0] == 1) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(150, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else 
 			g.fillRect(150, 350, oButtonWidth, oButtonHeight);
-		if(area1 == 2) {
+		if(area[0] == 2) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(320, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(320, 350, oButtonWidth, oButtonHeight);
-		if (area1 == 3) {
+		if (area[0] == 3) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(490, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(490, 350, oButtonWidth, oButtonHeight);
 		
-		if (area2 == 1) {
+		if (area[1] == 1) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(910, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else 
 			g.fillRect(910, 350, oButtonWidth, oButtonHeight);
-		if(area2 == 2) {
+		if(area[1] == 2) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(1080, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(1080, 350, oButtonWidth, oButtonHeight);
-		if (area2 == 3) {
+		if (area[1] == 3) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(1250, 350, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
@@ -373,38 +351,38 @@ public class PlayerSelection extends JPanel implements ActionListener{
 			g.fillRect(1250, 350, oButtonWidth, oButtonHeight);
 		
 		
-		if (area3 == 1) {
+		if (area[2] == 1) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(150, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else 
 			g.fillRect(150, 710, oButtonWidth, oButtonHeight);
-		if(area3 == 2) {
+		if(area[2] == 2) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(320, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(320, 710, oButtonWidth, oButtonHeight);
-		if (area3 == 3) {
+		if (area[2] == 3) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(490, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(490, 710, oButtonWidth, oButtonHeight);
 		
-		if (area4 == 1) {
+		if (area[3] == 1) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(910, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else 
 			g.fillRect(910, 710, oButtonWidth, oButtonHeight);
-		if(area4 == 2) {
+		if(area[3] == 2) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(1080, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
 		} else
 			g.fillRect(1080, 710, oButtonWidth, oButtonHeight);
-		if (area4 == 3) {
+		if (area[3] == 3) {
 			g.setColor(new Color(25, 240, 240));
 			g.fillRect(1250, 710, oButtonWidth, oButtonHeight);
 			g.setColor(Color.gray);
@@ -436,32 +414,32 @@ public class PlayerSelection extends JPanel implements ActionListener{
 		g2.drawString("Human", 170, 755);
 		g2.drawString("Human", 930, 755);
 		
-		if (AI1lvl == 1) {
+		if (AIlvls[0] == 1) {
 			g2.drawString("Easy AI", 340, 395);
-		} else if (AI1lvl == 2) {
+		} else if (AIlvls[0]  == 2) {
 			g2.drawString("Medium AI", 322, 395);
-		} else if (AI1lvl == 3) {
+		} else if (AIlvls[0]  == 3) {
 			g2.drawString("Hard AI", 335, 395);
 		}
-		if (AI2lvl == 1) {
+		if (AIlvls[1]  == 1) {
 			g2.drawString("Easy AI", 1100, 395);
-		} else if (AI2lvl == 2) {
+		} else if (AIlvls[1] == 2) {
 			g2.drawString("Medium AI", 1082, 395);
-		} else if (AI2lvl == 3) {
+		} else if (AIlvls[1] == 3) {
 			g2.drawString("Hard AI", 1095, 395);
 		}
-		if (AI3lvl == 1) {
+		if (AIlvls[2] == 1) {
 			g2.drawString("Easy AI", 340, 755);
-		} else if (AI3lvl == 2) {
+		} else if (AIlvls[2] == 2) {
 			g2.drawString("Medium AI", 322, 755);
-		} else if (AI3lvl == 3) {
+		} else if (AIlvls[2] == 3) {
 			g2.drawString("Hard AI", 335, 755);
 		}
-		if (AI4lvl == 1) {
+		if (AIlvls[3] == 1) {
 			g2.drawString("Easy AI", 1100, 755);
-		} else if (AI4lvl == 2) {
+		} else if (AIlvls[3] == 2) {
 			g2.drawString("Medium AI", 1082, 755);
-		} else if (AI4lvl == 3) {
+		} else if (AIlvls[3] == 3) {
 			g2.drawString("Hard AI", 1095, 755);
 		}
 		
@@ -497,10 +475,20 @@ public class PlayerSelection extends JPanel implements ActionListener{
         }
 	}
 
-	public void actionPerformed(ActionEvent arg0) {}
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==textFields[0]){
+        	names[0] = textFields[0].getText();
+        }
+		if(e.getSource()==textFields[1]){
+        	names[1] = textFields[1].getText();
+        }
+		if(e.getSource()==textFields[2]){
+        	names[2] = textFields[2].getText();
+        }
+		if(e.getSource()==textFields[3]){
+        	names[3] = textFields[3].getText();
+        }       
+	}
 }
-
-
-
 
 

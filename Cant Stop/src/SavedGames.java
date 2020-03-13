@@ -7,21 +7,45 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 
 import javax.swing.JPanel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 public class SavedGames extends JPanel implements ActionListener{
 	private int ScreenAmount = 3;
 	private int GameAmount = 4;
 	private int move = 0;
 	private boolean arrow = false;
-	Run game;
+	private Run game;
+	private String[] dates;
+	private int numberOfSaves=3;
 	SavedGames(Run game){
+		
+		
 		setBackground(Color.red);
 		setVisible(true);
 		this.game = game;
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+				if ((e.getY() <= 95) && (e.getY() >= 35)) {
+					if ((e.getX() <= 205) && (e.getX() >= 45)) {
+						MainMenu main= new MainMenu(game);
+						game.frame.getContentPane().removeAll();
+						game.frame.getContentPane().add(main);
+						game.frame.revalidate();
+					}
+				}
+				
 				if (e.getX() >= 1080 && e.getX() <= 1130) {
 					if (ScreenAmount >= 1) {
 						if (e.getY() >= 225 && e.getY() <= 300) {
@@ -71,8 +95,11 @@ public class SavedGames extends JPanel implements ActionListener{
 					}
 				}
 				arrow = false;
+					
 			}
+			
 		});
+		updateDateArray();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -154,7 +181,7 @@ public class SavedGames extends JPanel implements ActionListener{
 		g2.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 80));
 		g2.drawString("Saved Games", 510, 120);
 		g2.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 25));
-		g2.drawString("Main Menu", 50, 70);
+		g2.drawString("Back", 70, 70);
 		
 		// NEED GAME NAMES
 		if (GameAmount >= 3) {
@@ -175,6 +202,52 @@ public class SavedGames extends JPanel implements ActionListener{
 		}
 		// NEED GAME NAMES
 	}
+	
+	private void updateDateArray() {
+		String[] dateArray = new String[numberOfSaves];
+		for (int i = 0; i < numberOfSaves; i++) {
+			File tempFile = new File("Save\\SaveGame" + (i + 1) + ".xml");
+			boolean exists = tempFile.exists();
+			if (exists) {
+				try {
+					File file = new File("Save\\SaveGame" + (i + 1) + ".xml");
+					DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					Document doc = dBuilder.parse(file);
+					NodeList Nodes = doc.getChildNodes().item(0).getChildNodes();
+					String dateAndTime = Nodes.item(0).getTextContent();
+					dateArray[i] = dateAndTime;
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				
+			}else {
+				dateArray[i]="new game";
+			}
+
+		}
+		dates= dateArray;
+	}
+	private void deleteSave(int numSave) {
+		try
+        { 
+            Files.deleteIfExists(Paths.get("Save\\SaveGame" + numSave + ".xml")); 
+        } 
+        catch(NoSuchFileException e) 
+        { 
+            System.out.println("No such file/directory exists"); 
+        } 
+        catch(DirectoryNotEmptyException e) 
+        { 
+            System.out.println("Directory is not empty."); 
+        } 
+        catch(IOException e) 
+        { 
+            System.out.println("Invalid permissions."); 
+        } 
+		numberOfSaves--;
+		updateDateArray();
+	}
+
 	
 	private void background (Graphics g) {
 		Color shadeColor;
@@ -212,6 +285,9 @@ public class SavedGames extends JPanel implements ActionListener{
 	}
 
 }
+
+
+
 
 
 
