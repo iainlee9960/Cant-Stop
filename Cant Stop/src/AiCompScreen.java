@@ -145,7 +145,6 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	}
 
 	public void paintComponent(Graphics g) {
-
 		if (confirmBoxOn) {
 			textField.setBounds(2000, 285, 550, 70);
 		}
