@@ -81,7 +81,7 @@ public class SaveGame {
 				else {
 					type.setValue("COMPUTER");
 					Attr AiName = document.createAttribute("AI");
-					AiName.setValue(players[i].getAIName());
+					AiName.setValue(players[i].getPlayerName());
 					playerNum.setAttributeNode(type);
 					playerNum.setAttributeNode(AiName);					
 				}
@@ -145,7 +145,7 @@ public class SaveGame {
 		int[] indexesOfColumnsCompleted;
 		CantStopPlayer[] completedColumns = new CantStopPlayer[12];
 		int currentPlayerIndex = 0;
-		CantStopPlayer[] players;
+		CantStopPlayer[] players = new CantStopPlayer[numPlayers];
 		try {
 
 			File file = new File(xmlFilePath);
@@ -189,7 +189,7 @@ public class SaveGame {
 				players[i].getRecord().setPieceLocations(makeArray(playerSpecs.item(3).getTextContent()));
 				if (playerSpecs.getLength() == 5) {
 					currentPlayerIndex = i;
-					players[i].getRecord().setNuetralLocations(makeArray(playerSpecs.item(4).getTextContent()));
+					players[i].getRecord().setNeutralLocations(makeArray(playerSpecs.item(4).getTextContent()));
 				}
 			}
 			indexesOfColumnsCompleted = makeArray(Nodes.item(2).getTextContent());

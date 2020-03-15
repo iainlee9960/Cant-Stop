@@ -24,11 +24,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class CantStopGameScreen extends JPanel implements MouseListener {
-
 	private int mostrecentchoice = 99; // intentionally out of bounds for usage so no buttons start highlighted
 	private boolean isfast = false;
 	private boolean makingchoice = false; // FALSE when player prompted to make a roll, TRUE when player choosing move
-	// options
 	private boolean busted = false;
 	private int[][] choices; // SET TO THE LIST OF CHOICES FROM CANTSTOPGAME IN THE PAINTCOMPONENT
 	private boolean AIExist = false;
@@ -162,7 +160,9 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 						handleroll();
 					}
 				} else if (in(1150, 830, 1275, 895)) {
-					handlestop();
+					if(!makingchoice) {
+						handlestop();
+					}
 				} 
 			} else {
 				handleAIMove();

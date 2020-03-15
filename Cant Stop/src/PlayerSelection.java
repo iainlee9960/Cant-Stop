@@ -266,21 +266,6 @@ public class PlayerSelection extends JPanel implements ActionListener{
 								index++;
 							}
 							if(numHuman==0) {
-								/*int[] lvls = new int[numPlayers];
-								String[] CpuNames = new String[numPlayers];
-								Color[] CpuColors = new Color[numPlayers];
-								index = 0;
-								for(int i=0;i<4;i++) {
-									if(area[i]==3) {
-										index--;
-									}
-									if(area[i]==2) {
-										lvls[index] = AIlvls[i];
-										CpuNames[index] = names[i];
-										CpuColors[index] = getColor(i);
-									}
-									index++;
-								}*/
 								game.frame.getContentPane().removeAll();
 								AiCompScreen aiHoldScreen = new AiCompScreen(game, players);
 								aiHoldScreen.setBackground(Color.red);	
