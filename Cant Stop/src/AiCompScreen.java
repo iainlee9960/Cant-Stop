@@ -17,9 +17,10 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	final int promptTell = 130;
 	final int promptBoxX = 775;
 
-	int[] aiTypes;
+	/*int[] aiTypes;
 	String[] aiNames;
-	Color[] aiColors;
+	Color[] aiColors;*/
+	ComputerPlayer[] Cpus;
 	int[] currentRunWins = { 1, 6, 2, 3 };
 	int numAi;
 
@@ -34,15 +35,20 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	JFormattedTextField textField = new JFormattedTextField("");
 	Run game;
 
-	public AiCompScreen(Run game, int[] aiDiffTypes, String[] aiGivenNames, Color[] aiColors) {
+	public AiCompScreen(Run game, CantStopPlayer[] players/*int[] aiDiffTypes, String[] aiGivenNames, Color[] aiColors*/) {
 		this.game = game;
-		aiTypes = aiDiffTypes;
+		/*aiTypes = aiDiffTypes;
 		aiNames = aiGivenNames;
 		this.aiColors = aiColors;
 		if (aiTypes.length == aiNames.length)
 			numAi = aiTypes.length;
 		else
-			System.out.println("Wrong size ERROR!!");
+			System.out.println("Wrong size ERROR!!");*/
+		numAi = players.length;
+		Cpus = new ComputerPlayer[numAi];
+		for(int i=0; i<numAi; i++) {
+			Cpus[i] = (ComputerPlayer)players[i];
+		}
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -72,23 +78,23 @@ public class AiCompScreen extends JPanel implements ActionListener {
 						repaint();
 					}
 				}
-				if (confirmBoxOn) {
+				if (confirmBoxOn) { //handles confirm 
 					if ((e.getX() > 400 && e.getX() < (400 + buttonW))
 							&& (e.getY() > 500 && e.getY() < (500 + buttonH))) {
 						confirmBoxOn = false;
-						if (confirmNum == 1) {
+						if (confirmNum == 1) { //handles main menu confirmation
 							MainMenu main = new MainMenu(game);
 							game.frame.getContentPane().removeAll();
 							game.frame.getContentPane().add(main);
 							game.frame.revalidate();
-						} else if (confirmNum == 2) {
+						} else if (confirmNum == 2) { //handles run confirmation
 							if (numGamesRun == 0) {
 								didntRun = true;
 								confirmBoxOn = false;
 							} else {
 								ranEngine = true;
 								AiComparisonEngine run = new AiComparisonEngine();
-								ComputerPlayer[] players = new ComputerPlayer[numAi];
+								/*ComputerPlayer[] players = new ComputerPlayer[numAi];
 								int runner = 0;
 								while (numAi > runner) {
 									players[runner] = new ComputerPlayer();
@@ -99,10 +105,10 @@ public class AiCompScreen extends JPanel implements ActionListener {
 									players[runner].setPlayerColor(aiColors[runner]);
 									players[runner].setPlayerName(aiNames[runner]);
 									runner++;
-								}
-								currentRunWins = run.compareAIs(players, numGamesRun);
+								}*/
+								currentRunWins = run.compareAIs(Cpus, numGamesRun);
 							}
-						} else {
+						} else { //handles back confirmation
 							PlayerSelection select = new PlayerSelection(game);
 							game.frame.getContentPane().removeAll();
 							game.frame.getContentPane().add(select);
@@ -110,7 +116,7 @@ public class AiCompScreen extends JPanel implements ActionListener {
 						}
 						repaint();
 					}
-					if ((e.getX() > 1030 && e.getX() < (1030 + buttonW))
+					if ((e.getX() > 1030 && e.getX() < (1030 + buttonW)) //handles cancel
 							&& (e.getY() > 500 && e.getY() < (500 + buttonH))) {
 						confirmBoxOn = false;
 						repaint();
@@ -258,16 +264,22 @@ public class AiCompScreen extends JPanel implements ActionListener {
 		g.setColor(Color.white);
 		g.fillRect(aiNameX - 10, 190 + (130 * boxNum), aiButtonWidth, aiButtonHeight);
 
-		g.setColor(aiColors[boxNum]);
+		g.setColor(Cpus[boxNum].getPlayerColor());
 		g.fillRect(aiNameX, 180 + (130 * boxNum), aiButtonWidth, aiButtonHeight);
 		g.fillRect(promptBoxX - 140, 220 + (120 * boxNum), 145, 65);
 
 		g2.setColor(Color.BLACK);
 		g.drawRect(promptBoxX - 140, 220 + (120 * boxNum), 145, 65);
 		g2.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 70));
-		g2.drawString(aiNames[boxNum], aiNameX + 40, 245 + (130 * boxNum));
+		g2.drawString(Cpus[boxNum].getPlayerName(), aiNameX + 40, 245 + (130 * boxNum));
 		g2.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 35));
-		g2.drawString(" " + aiTypes[boxNum] + " ", aiNameX + 5, 245 + (130 * boxNum));
+		int lvl;
+		if(Cpus[boxNum].getAIName()=="SimpleStrategy") {
+			lvl = 2;
+		} else {
+			lvl = 1;
+		}
+		g2.drawString(" " + lvl + " ", aiNameX + 5, 245 + (130 * boxNum));
 		g2.setFont(new Font("Times New Roman", Font.PLAIN, 55));
 		g2.drawString("Wins: ", promptBoxX - 130, 270 + (120 * boxNum));
 	}

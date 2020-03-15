@@ -3,7 +3,7 @@ public class HumanPlayer extends CantStopPlayer{
 	boolean isHuman(){
 		return true;
 	}
-
+	
 	@Override
 	void startGame(CantStopGame game) {
 		// TODO Auto-generated method stub

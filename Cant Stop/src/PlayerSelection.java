@@ -245,12 +245,14 @@ public class PlayerSelection extends JPanel implements ActionListener{
 									players[index] = new HumanPlayer();
 									players[index].setPlayerName(names[i]);
 									players[index].setPlayerColor(getColor(i));
+									players[index].setRecord();
 									numHuman++;
 								}
 								if(area[i]==2) {
 									players[index] = new ComputerPlayer();
 									players[index].setPlayerName(names[i]);
 									players[index].setPlayerColor(getColor(i));
+									players[index].setRecord();
 									if(AIlvls[i]==1) {
 										ComputerPlayer temp = (ComputerPlayer)players[index];
 										temp.setAI("Random");
@@ -264,7 +266,7 @@ public class PlayerSelection extends JPanel implements ActionListener{
 								index++;
 							}
 							if(numHuman==0) {
-								int[] lvls = new int[numPlayers];
+								/*int[] lvls = new int[numPlayers];
 								String[] CpuNames = new String[numPlayers];
 								Color[] CpuColors = new Color[numPlayers];
 								index = 0;
@@ -278,9 +280,9 @@ public class PlayerSelection extends JPanel implements ActionListener{
 										CpuColors[index] = getColor(i);
 									}
 									index++;
-								}
+								}*/
 								game.frame.getContentPane().removeAll();
-								AiCompScreen aiHoldScreen = new AiCompScreen(game, lvls, CpuNames, CpuColors, players);
+								AiCompScreen aiHoldScreen = new AiCompScreen(game, players);
 								aiHoldScreen.setBackground(Color.red);	
 								game.frame.getContentPane().add(aiHoldScreen);
 								game.frame.revalidate();

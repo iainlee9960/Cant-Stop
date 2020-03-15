@@ -11,11 +11,10 @@ public abstract class CantStopPlayer {
 	abstract int chooseDice(CantStopGame game, int[] rolled, int[][] choices);
 
 	abstract boolean rollAgain(CantStopGame game);
-
+	abstract boolean isHuman();
 	void setRecord() {
 		record = new PlayerRecord();
 	}
-
 	String getPlayerName() {
 		return playerName;
 	}

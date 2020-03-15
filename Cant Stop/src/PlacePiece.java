@@ -4,8 +4,8 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 class PlacePiece extends JPanel {
-	private int squareX;
-	private int squareY;
+	private int squareX,x;
+	private int squareY,y;
 	private int pieceW = 42;
 	private int pieceH = 10;
 	private int colorR;
@@ -21,7 +21,12 @@ class PlacePiece extends JPanel {
 							{528,528,528,528,528,528,528,528,528},
 							{589,589,589,589,589,589,589},
 							{657,657,657,657,657},
-							{728,728,727}};
+							{728,728,727},
+							//pieces on the side
+							{41,146,55},
+							{676,793,771},
+							{47,54,152},
+							{676,793,771}};
 	private int[][] yCoord= {{553,464,369},
 							{611,538,463,386,309},
 							{674,599,533,464,390,323,252},
@@ -32,26 +37,47 @@ class PlacePiece extends JPanel {
 							{717,653,591,527,464,398,330,266,204},
 							{674,599,533,463,390,323,252},
 							{611,537,464,386,309},
-							{554,463,369}};
-	public PlacePiece(Color assignColor, int x, int y, int num, Graphics g) {
-		int startX = xCoord[x-2][y-1];
-		int startY = yCoord[x-2][y-1];
-		colorR = assignColor.getRed();
-		colorG = assignColor.getGreen();
-		colorB = assignColor.getBlue();
-		if(colorR<41)
-			colorR = 41;
-		if(colorR>202)
-			colorR = 202; 
-		if(colorG<41)
-			colorG = 41;
-		if(colorG>202)
-			colorG = 202;
-		if(colorB<41)
-			colorB = 41;
-		if(colorB>202)
-			colorB = 202;
-		moveSquare(startX-6, startY-32-(10*(num-1)), g);
+							{554,463,369},
+							//pieces on the side
+							{154,157,243},
+							{113,109,204},
+							{726,831,789},
+							{772,694,811}};
+	public int getX() {
+		return x;
+	}
+	public int getY() {
+		return y;
+	}
+	public PlacePiece(Color assignColor, int x, int y, int num, boolean show, Graphics g) {
+		this.x = x;
+		this.y = y;
+		if(show) {
+			int startX = xCoord[x-2][y-1];
+			int startY = yCoord[x-2][y-1];
+			colorR = assignColor.getRed();
+			colorG = assignColor.getGreen();
+			colorB = assignColor.getBlue();
+			if(colorR<41)
+				colorR = 41;
+			if(colorR>202)
+				colorR = 202; 
+			if(colorG<41)
+				colorG = 41;
+			if(colorG>202)
+				colorG = 202;
+			if(colorB<41)
+				colorB = 41;
+			if(colorB>202)
+				colorB = 202;
+			moveSquare(startX-6, startY-32-(10*(num-1)), g);
+		}
+	}
+	public boolean equals(PlacePiece p) {
+		if(p.getX()==x && p.getY()==y) {
+			return true;
+		}
+		return false;
 	}
 	public void moveSquare(int x, int y, Graphics g) {
 		squareX = x;
@@ -81,14 +107,7 @@ class PlacePiece extends JPanel {
 }
 
 
-/*private int[][] yCoord= {{369,464,554},
-						{309,386,463,537,612},
-						{252,323,391,464,532,599,674},
-						{204,268,330,398,465,527,591,653,718},
-						{169,226,285,347,404,465,520,578,634,696,757},
-						{149,202,254,305,357,410,464,519,571,620,674,725,776},
-						{170,226,286,348,404,465,520,578,633,696,757},
-						{204,268,331,398,464,526,591,655,717},
-						{253,323,390,463,533,599,675},
-						{309,386,464,537,612},
-						{369,464,554}};*/
+
+
+
+

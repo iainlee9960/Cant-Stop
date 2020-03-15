@@ -12,7 +12,7 @@ public class ComputerPlayer extends CantStopPlayer {
 			strategy = new RandomStrategy();
 		}
 	}
-
+	
 	boolean isHuman() {
 		return false;
 	}

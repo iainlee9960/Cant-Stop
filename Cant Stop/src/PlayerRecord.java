@@ -27,8 +27,18 @@ public class PlayerRecord {
 	public void setPieceLocations(int[] locations) {
 		pieceLocations = locations;
 	}
-	public void setNuetralLocations(int[] neutralLocations) {
+	public void setNeutralLocations(int[] neutralLocations) {
 		neutralMarkerLocations = neutralLocations;
+		updateNumNeutralLeft();
+	}
+	public void updateNumNeutralLeft() {
+		int placed = 0;
+		for(int i=0; i<neutralMarkerLocations.length; i++) {
+			if(neutralMarkerLocations[i]>0) {
+				placed++;
+			}
+		}
+		numNeutralLeft = 3-placed;
 	}
 	public void setNumNeutralLeft () {
 		numNeutralLeft = 3;
@@ -51,7 +61,6 @@ public class PlayerRecord {
 			}
 		}
 	}
-	
 }
 
 
