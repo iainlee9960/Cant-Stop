@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,10 +33,14 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 	private int[][] choices; // SET TO THE LIST OF CHOICES FROM CANTSTOPGAME IN THE PAINTCOMPONENT
 	private boolean AIExist = false;
 	private CantStopGame game;
+	Run screen;
 	
-	public CantStopGameScreen(boolean AIComparison, CantStopGame newGame) {
+	public CantStopGameScreen(boolean AIComparison, CantStopGame newGame, Run screen) {
+		this.screen = screen;
 		AIExist = AIComparison;
 		game = newGame;
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 		addMouseListener(this);
 	}
 	// TODO USE isFast() and mostRecentChoice() to get the speed the player wants to
@@ -83,9 +89,26 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		}
 		this.repaint();
 	}
+	boolean quitConfirm = false;
 	private void handlequit() {
-		System.out.println("quit");
-		//TODO put code to handle quit
+		if(!quitConfirm) {
+			quitConfirm = true;
+		} else {
+			MainMenu main= new MainMenu(screen);
+			screen.frame.getContentPane().removeAll();
+			screen.frame.getContentPane().add(main);
+			screen.frame.revalidate();
+		}
+		this.repaint();
+	}
+	private void handlecancel() {
+		quitConfirm = false;
+		this.repaint();
+	}
+	private void handlesave() {
+		SaveGame file = new SaveGame();
+		file.saveGame(game, 1);
+		System.out.println("save");
 	}
 	private boolean chooseStep = false;
 	private boolean stopStep = false;
@@ -98,11 +121,13 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 				mostrecentchoice = 99;
 				game.afterRollPressed();
 				chooseStep = true;
-			} else if(choices.length==0) {
+			} 
+			if(choices!=null && choices.length==0) {
 				makingchoice = false;
 				game.resetForNewTurn();
 			} else {
 				if(chooseStep) {
+					choices = game.choices;
 					mostrecentchoice = game.getCurrentPlayer().chooseDice(game, game.dice, choices);
 					game.afterDonePressed(mostRecentChoice());
 					chooseStep = false;
@@ -131,50 +156,67 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {}
 	public void mousePressed(MouseEvent e) {
 		//System.out.println("("+e.getX()+","+e.getY()+")");
-		if(in(1150, 460, 1300, 580)) {
-			handlechoice(0);
-		} else if(in(1298, 460, 1448, 580)) {
-			handlechoice(1);
-		} else if(in(1150, 578, 1300, 698)) {
-			handlechoice(2);
-		} else if(in(1298, 578, 1448, 698)) {
-			handlechoice(3);
-		} else if(in(1150, 696, 1300, 816)) {
-			handlechoice(4);
-		} else if(in(1298, 696, 1448, 816)) {
-			handlechoice(5);
-		} else if(in(1450, 30, 1525, 45)) {
-			handlespeed(false);
-		} else if(in(1450, 60, 1525, 75)) {
-			handlespeed(true);
-		} else if(in(1150, 830, 1435, 895)) {
-			if(game.getCurrentPlayer().isHuman()) {
-				if(in(1310, 830, 1435, 895)) {
-					if(makingchoice) {
-						if(mostrecentchoice < 7) { //MAKE SURE A BUTTON HAS BEEN PRESSED AND NOT AT DEFAULT 99 VALUE
-							handledone();
-						} else if(busted) {
-							handlebust();
+		if(game.checkGameOver()==null) {	
+			if(in(1150, 460, 1300, 580)) {
+				handlechoice(0);
+			} else if(in(1298, 460, 1448, 580)) {
+				handlechoice(1);
+			} else if(in(1150, 578, 1300, 698)) {
+				handlechoice(2);
+			} else if(in(1298, 578, 1448, 698)) {
+				handlechoice(3);
+			} else if(in(1150, 696, 1300, 816)) {
+				handlechoice(4);
+			} else if(in(1298, 696, 1448, 816)) {
+				handlechoice(5);
+			} else if(in(1450, 30, 1525, 45)) {
+				handlespeed(false);
+			} else if(in(1450, 60, 1525, 75)) {
+				handlespeed(true);
+			} else if(in(1150, 830, 1435, 895)) {
+				if(game.getCurrentPlayer().isHuman()) {
+					if(in(1310, 830, 1435, 895)) {
+						if(makingchoice) {
+							if(mostrecentchoice < 7) { //MAKE SURE A BUTTON HAS BEEN PRESSED AND NOT AT DEFAULT 99 VALUE
+								handledone();
+							} else if(busted) {
+								handlebust();
+							}
+						} else {
+							handleroll();
 						}
-					} else {
-						handleroll();
-					}
-				} else if (in(1150, 830, 1275, 895)) {
-					if(!makingchoice) {
-						handlestop();
-					}
-				} 
-			} else {
-				handleAIMove();
+					} else if (in(1150, 830, 1275, 895)) {
+						if(!makingchoice) {
+							handlestop();
+						}
+					} 
+				} else {
+					handleAIMove();
+				}
+			} else if(in(e, 20, 20, 120, 68)) {
+				handlequit();
+			} else if(in(e, 140, 20, 240, 68)) {
+				handlesave();
+			} else if(in(e, 510, 540, 640, 590)) {
+				if(quitConfirm) {
+					handlequit();
+				}
+			} else if(in(e, 960, 540, 1090, 590)) {
+				handlecancel();
 			}
-		} else if (in(20, 20, 170, 110)) {
-			handlequit();
 		}
 	}
-
+	private boolean in(MouseEvent e, int x1, int y1, int x2, int y2) {
+		if ((e.getX() > x1 && e.getX() < x2 || e.getX() > x2 && e.getX() < x1)
+				&& (e.getY() > y1 && e.getY() < y2 || e.getY() > y2 && e.getY() < y1)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	private boolean in(int x1, int y1, int x2, int y2) {
 		Point mousepoint = MouseInfo.getPointerInfo().getLocation();
-		if ((mousepoint.x > x1 && mousepoint.x < x2 || mousepoint.y > x2 && mousepoint.y < x1)
+		if ((mousepoint.x > x1 && mousepoint.x < x2 || mousepoint.x > x2 && mousepoint.x < x1)
 				&& (mousepoint.y > y1 && mousepoint.y < y2 || mousepoint.y > y2 && mousepoint.y < y1)) {
 			return true;
 		} else {
@@ -206,6 +248,7 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		Image grid = new ImageIcon("images/grid.png").getImage();
 		g2d.drawImage(grid, 40, 60, this);
 		drawQuitButton(g2d);
+		drawSaveButton(g2d);
 		drawCurrentPlayer(g2d);
 		if(game.getCurrentPlayer().isHuman() || !isFast()) {
 			drawChoices(g,g2d);
@@ -217,6 +260,27 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		drawDice(g2d);
 		drawPieces(g2d);
 		drawWinnerScreen(g2d);
+		drawQuitConfirmScreen(g2d);
+	}
+	private void drawQuitConfirmScreen(Graphics g2d) {
+		if(quitConfirm) {
+			g2d.setColor(new Color(100,100,100 ));
+			g2d.fillRect(500, 300, 600, 300);
+			
+			g2d.setColor(new Color(0, 155, 20));
+			g2d.fillRect(510, 540, 130, 50);
+			g2d.setColor(new Color(171, 17, 4));
+			g2d.fillRect(960, 540, 130, 50);
+			
+			g2d.setColor(Color.BLACK);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 55));
+			g2d.drawString("Are you sure", 590, 390);
+			g2d.drawString("you want to quit?", 530, 480);
+
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 25));
+			g2d.drawString("Confirm", 516, 573);
+			g2d.drawString("Cancel", 973, 573);
+		}
 	}
 	private void drawAITurnButton(Graphics g2d) {
 		if(isFast()) {
@@ -224,15 +288,15 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			g2d.fillRect(1150, 810, 285, 60);
 			g2d.setColor(Color.BLACK);
 			g2d.drawRect(1150, 810, 285, 60);
-			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-			g2d.drawString("Run AIs Turn", 1165, 855);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 35));
+			g2d.drawString("Run AIs Turn", 1165, 852);
 		} else {
 			g2d.setColor(Color.WHITE);
 			g2d.fillRect(1150, 810, 285, 60);
 			g2d.setColor(Color.BLACK);
 			g2d.drawRect(1150, 810, 285, 60);
-			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-			g2d.drawString("Next", 1165, 855);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 40));
+			g2d.drawString("Next", 1235, 855);
 		}
 		
 	}
@@ -242,7 +306,7 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		g2d.fillRect(1100, 150, 400, 90);
 		g2d.setColor(Color.BLACK);
 		g2d.drawRect(1100, 150, 400, 90);
-		g2d.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+		g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 50));
 		String currentPlayer = game.getPlayerOrder()[game.getCurrentPlayerIndex()].getPlayerName();
 		g2d.drawString(currentPlayer, 1110, 210); // THE NAME OF THE PLAYER WHO IS GOING AT THE MOMENT
 	}
@@ -252,11 +316,12 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			int green = game.getWinner().getPlayerColor().getGreen();
 			int blue = game.getWinner().getPlayerColor().getBlue();
 			g2d.setColor(new Color(red,green,blue,170));
-			g2d.fillRect(260, 220, 920, 470);
+			g2d.fillRect(300, 200, 1000, 500);
 			g2d.setColor(Color.BLACK);
-			g2d.setFont(new Font("Copperplate Gothic Bold", Font.BOLD, 150));
-			g2d.drawString(game.getWinner().getPlayerName(), 350, 400);
-			g2d.drawString("WINS", 450, 600);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.BOLD, 150));	
+			String winner = game.getWinner().getPlayerName();
+			g2d.drawString(winner, 800-(winner.length()*55), 400);
+			g2d.drawString("WINS", 540, 590);
 		}
 	}
 	private void drawPieces(Graphics g2d) {
@@ -311,19 +376,20 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		if(makingchoice) {
 			if((choices.length == 0)) {
 				g2d.setColor(Color.BLACK);
-				g2d.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+				g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 30));
 				g2d.drawString("You Busted!", 1156, 432);
 				g2d.setColor(Color.WHITE);
 				g2d.fillRect(1310, 810, 125, 60);
 				g2d.setColor(Color.BLACK);
 				g2d.drawRect(1310, 810, 125, 60);
-				g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-				g2d.drawString("DONE", 1320, 855);
+				g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 32));
+				g2d.drawString("DONE", 1320, 852);
 				busted = true;
 			} else {
 				busted = false;
 				g2d.setColor(Color.BLACK);
-				g2d.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+				//g2d.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+				g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 25));
 				if(game.getCurrentPlayer().isHuman()) {
 					g2d.drawString("Click to Select:", 1156, 432);
 				}
@@ -382,8 +448,8 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 					g2d.fillRect(1310, 810, 125, 60);
 					g2d.setColor(Color.BLACK);
 					g2d.drawRect(1310, 810, 125, 60);
-					g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-					g2d.drawString("DONE", 1320, 855);
+					g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 32));
+					g2d.drawString("DONE", 1320, 852);
 				}
 			}
 		} else if(game.getCurrentPlayer().isHuman()) { //If there are no choices, let the player end their turn or roll again
@@ -391,15 +457,15 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			g2d.fillRect(1150, 810, 125, 60);
 			g2d.setColor(Color.BLACK);
 			g2d.drawRect(1150, 810, 125, 60);
-			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-			g2d.drawString("STOP", 1165, 855);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 35));
+			g2d.drawString("STOP", 1161, 853);
 
 			g2d.setColor(Color.WHITE);
 			g2d.fillRect(1310, 810, 125, 60);
 			g2d.setColor(Color.BLACK);
 			g2d.drawRect(1310, 810, 125, 60);
-			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-			g2d.drawString("ROLL", 1323, 855);
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 35));
+			g2d.drawString("ROLL", 1321, 853);
 		}
 	}
 	private String choicetext(int[][] arr, int in) {
@@ -422,7 +488,7 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		}
 		g2d.fillRect(x + 2, y + 2, w - 4, h - 4);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(text, x + ((w - (text.length() * 15)) / 2), y + 60);
+		g2d.drawString(text, x + ((w - (text.length() * 15)) / 2), y + 65);
 		return g2d;
 	}
 	private void drawAIRadioButtons(Graphics g2d) {
@@ -443,18 +509,26 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			g2d.drawOval(1450, 10, 15, 15);
 			g2d.drawOval(1450, 40, 15, 15);
 
-			g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+			g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 20));
 			g2d.drawString("SLOW", 1470, 25);
 			g2d.drawString("FAST", 1470, 55);
 		}
 	}
 	private void drawQuitButton(Graphics g2d) {
-		g2d.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+		g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 30));
 		g2d.setColor(Color.WHITE);
-		g2d.fillRect(20, 20, 150, 90);
+		g2d.fillRect(20, 20, 100, 48);
 		g2d.setColor(Color.BLACK);
-		g2d.drawRect(20, 20, 150, 90);
-		g2d.drawString("QUIT", 47, 73);
+		g2d.drawRect(20, 20, 100, 48);
+		g2d.drawString("QUIT", 30, 55);
+	}
+	private void drawSaveButton(Graphics g2d) {
+		g2d.setFont(new Font("Copperplate Gothic Bold", Font.PLAIN, 28));
+		g2d.setColor(Color.WHITE);
+		g2d.fillRect(140, 20, 100, 48);
+		g2d.setColor(Color.BLACK);
+		g2d.drawRect(140, 20, 100, 48);
+		g2d.drawString("SAVE", 147, 55);
 	}
 	private void drawDice(Graphics g) {
 		Image d1 = new ImageIcon("images/die1.gif").getImage();

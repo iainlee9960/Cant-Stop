@@ -9,19 +9,19 @@ public class SimpleStrategy extends Strategy {
 		int bestdistance=20;
 		for (int i=0; i<(choices.length); i++) {
 			for (int j=0; j<choices[i].length; j++) {
-				System.out.println("I,J:"+i+","+j+". choices[i][j]: "+choices[i][j]+". whitelocations of: "+whitelocations[choices[i][j]-2]+". Locations of: "+locations[choices[i][j]-2]);
+				//System.out.println("I,J:"+i+","+j+". choices[i][j]: "+choices[i][j]+". whitelocations of: "+whitelocations[choices[i][j]-2]+". Locations of: "+locations[choices[i][j]-2]);
 				if (whitelocations[choices[i][j]-2]!=0) {
 					if (determineDistance(choices[i][j]-2, whitelocations[choices[i][j]-2])<bestdistance) {
 						bestdistance=determineDistance(choices[i][j]-2, whitelocations[choices[i][j]-2]);
 						besti=i;
-						System.out.println("white new besti: "+besti);
+						//System.out.println("white new besti: "+besti);
 					}
 				}
 				if (locations[choices[i][j]-2]!=0) {
 					if (determineDistance(choices[i][j]-2, locations[choices[i][j]-2])<bestdistance) {
 						bestdistance=determineDistance(choices[i][j]-2, locations[choices[i][j]-2]);
 						besti=i;
-						System.out.println("locations new besti: "+besti);
+						//System.out.println("locations new besti: "+besti);
 					}
 				}
 			}

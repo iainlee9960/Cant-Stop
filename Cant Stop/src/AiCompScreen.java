@@ -5,8 +5,8 @@ import java.lang.*;
 
 public class AiCompScreen extends JPanel implements ActionListener {
 	final static String LABEL_TEXT = "This is custom:";
-	JFrame frame;
-	JPanel panel;
+	//JFrame frame;
+	//JPanel panel;
 	JTextField numGames;
 	final int aiButtonHeight = 80;
 	final int aiButtonWidth = 500;
@@ -17,9 +17,6 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	final int promptTell = 130;
 	final int promptBoxX = 775;
 
-	/*int[] aiTypes;
-	String[] aiNames;
-	Color[] aiColors;*/
 	ComputerPlayer[] Cpus;
 	int[] currentRunWins = { 1, 6, 2, 3 };
 	int numAi;
@@ -35,23 +32,15 @@ public class AiCompScreen extends JPanel implements ActionListener {
 	JFormattedTextField textField = new JFormattedTextField("");
 	Run game;
 
-	public AiCompScreen(Run game, CantStopPlayer[] players/*int[] aiDiffTypes, String[] aiGivenNames, Color[] aiColors*/) {
+	public AiCompScreen(Run game, CantStopPlayer[] players) {
 		this.game = game;
-		/*aiTypes = aiDiffTypes;
-		aiNames = aiGivenNames;
-		this.aiColors = aiColors;
-		if (aiTypes.length == aiNames.length)
-			numAi = aiTypes.length;
-		else
-			System.out.println("Wrong size ERROR!!");*/
 		numAi = players.length;
 		Cpus = new ComputerPlayer[numAi];
 		for(int i=0; i<numAi; i++) {
 			Cpus[i] = (ComputerPlayer)players[i];
 		}
-		panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
 		textField.addActionListener(this);
 		textField.setOpaque(false);
@@ -94,18 +83,6 @@ public class AiCompScreen extends JPanel implements ActionListener {
 							} else {
 								ranEngine = true;
 								AiComparisonEngine run = new AiComparisonEngine();
-								/*ComputerPlayer[] players = new ComputerPlayer[numAi];
-								int runner = 0;
-								while (numAi > runner) {
-									players[runner] = new ComputerPlayer();
-									if (aiTypes[runner] == 0)
-										players[runner].setAI("SimpleStrategy");
-									else
-										players[runner].setAI("RandomStrategy");
-									players[runner].setPlayerColor(aiColors[runner]);
-									players[runner].setPlayerName(aiNames[runner]);
-									runner++;
-								}*/
 								currentRunWins = run.compareAIs(Cpus, numGamesRun);
 							}
 						} else { //handles back confirmation

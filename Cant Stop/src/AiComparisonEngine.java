@@ -6,18 +6,13 @@ public class AiComparisonEngine {
 		for (int i=0; i<players.length; i++) {
 			gamesWonPerPlayer[i]=0;
 		}
+		
 		for (int i=0; i<games; i++) {
 			currentPlayer = (i%players.length);
 			CantStopPlayer[] completedColumns = {null, null, null, null, null, null, null, null, null, null, null};
 			CantStopGame game = new CantStopGame (players, currentPlayer, completedColumns);
-			game.runGame();
-			int index = 0;
-			for(int y=0; y<game.getPlayerOrder().length;y++) {
-				if(game.getPlayerOrder()[y]==game.getWinner()) {
-					index = y;
-				}
-			}
-			gamesWonPerPlayer[index]++;
+			int winner = game.runGame();
+			gamesWonPerPlayer[winner]++;
 		}
 		return gamesWonPerPlayer;
 	}

@@ -36,7 +36,7 @@ public class SaveGame {
 		for (int i = 0; i < NumPlayer; i++) {
 			players[i] = toSave.getPlayer(i); // possible fail point
 		}
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 11; i++) {
 			if (toSave.whoCompletedColumn(i) == null) {
 				ColumnsCompleted[i] = -1;
 			} else {
@@ -91,9 +91,9 @@ public class SaveGame {
 				Element completed = document.createElement("Completed");
 				Element pieceLocations = document.createElement("Piece Locations");
 
-				// need player color name and completed from Cant stop player
-				// nned peice locations and Nuetral peice location from records (Im assuming
-				// that the int array for nuetral peice location can be used to find nuetral
+				// need player color name and completed from Can't stop player
+				// need piece locations and Neutral piece location from records (I'm assuming
+				// that the int array for neutral piece location can be used to find neutral
 				// left
 				color.appendChild(document.createTextNode(String.valueOf(players[i].getPlayerColor())));
 				name.appendChild(document.createTextNode(players[i].getPlayerName()));

@@ -260,7 +260,8 @@ public class PlayerSelection extends JPanel implements ActionListener{
 									} else {
 										ComputerPlayer temp = (ComputerPlayer)players[index];
 										temp.setAI("SimpleStrategy");
-										players[index] = temp;									}
+										players[index] = temp;									
+									}
 									numCpu++;
 								}
 								index++;
@@ -273,13 +274,13 @@ public class PlayerSelection extends JPanel implements ActionListener{
 								game.frame.revalidate();
 							} else if(numCpu>0){
 								CantStopGame newGame = new CantStopGame(players);
-								CantStopGameScreen GameScreen= new CantStopGameScreen(true, newGame);
+								CantStopGameScreen GameScreen= new CantStopGameScreen(true, newGame, game);
 								game.frame.getContentPane().removeAll();
 								game.frame.getContentPane().add(GameScreen);
 								game.frame.revalidate();
 							} else {
 								CantStopGame newGame = new CantStopGame(players);
-								CantStopGameScreen GameScreen= new CantStopGameScreen(false, newGame);
+								CantStopGameScreen GameScreen= new CantStopGameScreen(false, newGame, game);
 								game.frame.getContentPane().removeAll();
 								game.frame.getContentPane().add(GameScreen);
 								game.frame.revalidate();

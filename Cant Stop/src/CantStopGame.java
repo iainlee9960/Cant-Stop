@@ -27,8 +27,20 @@ public class CantStopGame {
 		this.currentPlayerIndex = currentPlayerIndex;
 		this.completedColumns = completedColumns;
 	}
-	public void runGame() {
-		
+	public int runGame() {
+		//CantStopPlayer winner = new ComputerPlayer();
+		boolean gameOver = false;
+		while(!gameOver) {
+			for(int i=0; i<getNumPlayers(); i++) {
+				int current = getCurrentPlayerIndex();
+				runAITurn();
+				if(getWinner()!=null) {
+					gameOver = true;
+					return current;
+				}
+			}
+		}
+		return getCurrentPlayerIndex();
 	}
 	public CantStopPlayer[] getPlayerOrder() {
 		return playerOrder;
@@ -150,12 +162,14 @@ public class CantStopGame {
 	}
 	public void afterDonePressed(int choice) {
 		int[] locations = getPlayerOrder()[getCurrentPlayerIndex()].getRecord().getNeutralMarkerLocations();
-		for(int i=0; i<choices[choice].length; i++) {
-			if(locations[choices[choice][i]-2]==0) {
-				int current = getPlayerOrder()[getCurrentPlayerIndex()].getRecord().getPieceLocations()[choices[choice][i]-2];
-				locations[choices[choice][i]-2] = current+1;
-			} else {
-				locations[choices[choice][i]-2]++;
+		if(choices!=null) {
+			for(int i=0; i<choices[choice].length; i++) {
+				if(locations[choices[choice][i]-2]==0) {
+					int current = getPlayerOrder()[getCurrentPlayerIndex()].getRecord().getPieceLocations()[choices[choice][i]-2];
+					locations[choices[choice][i]-2] = current+1;
+				} else {
+					locations[choices[choice][i]-2]++;
+				}
 			}
 		}
 		getPlayerOrder()[getCurrentPlayerIndex()].getRecord().setNeutralLocations(locations);
