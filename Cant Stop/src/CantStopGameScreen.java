@@ -121,9 +121,9 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 				mostrecentchoice = 99;
 				game.afterRollPressed();
 				chooseStep = true;
-			} 
-			if(choices!=null && choices.length==0) {
+			} else if(choices!=null && choices.length==0) {
 				makingchoice = false;
+				chooseStep = false;
 				game.resetForNewTurn();
 			} else {
 				if(chooseStep) {
