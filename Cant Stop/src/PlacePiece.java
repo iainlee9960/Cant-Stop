@@ -11,6 +11,8 @@ class PlacePiece extends JPanel {
 	private int colorR;
 	private int colorG;
 	private int colorB;
+	private int stackNum;
+	Color assignColor;
 	private int[][] xCoord= {{97,97,97},
 							{169,169,171,169,169},
 							{235,235,235,235,235,235,235},
@@ -49,11 +51,43 @@ class PlacePiece extends JPanel {
 	public int getY() {
 		return y;
 	}
+	public Color getColor() {
+		return assignColor;
+	}
+	public void draw(Graphics g) {
+		int startX = xCoord[x-2][y-1];
+		int startY = yCoord[x-2][y-1];
+		colorR = assignColor.getRed();
+		colorG = assignColor.getGreen();
+		colorB = assignColor.getBlue();
+		if(colorR<41)
+			colorR = 41;
+		if(colorR>202)
+			colorR = 202; 
+		if(colorG<41)
+			colorG = 41;
+		if(colorG>202)
+			colorG = 202;
+		if(colorB<41)
+			colorB = 41;
+		if(colorB>202)
+			colorB = 202;
+		moveSquare(startX-6, startY-32-(10*(stackNum-1)), g);
+	}
+	public PlacePiece(Color assignColor, int x, int y, int num) {
+		this.x = x;
+		this.y = y;
+		this.assignColor = assignColor;
+		this.stackNum = num;
+	}
 	public PlacePiece(Color assignColor, int x, int y, int num, boolean show, Graphics g) {
 		this.x = x;
 		this.y = y;
+		this.assignColor = assignColor;
+		this.stackNum = num;
 		if(show) {
-			int startX = xCoord[x-2][y-1];
+			draw(g);
+			/*int startX = xCoord[x-2][y-1];
 			int startY = yCoord[x-2][y-1];
 			colorR = assignColor.getRed();
 			colorG = assignColor.getGreen();
@@ -70,7 +104,7 @@ class PlacePiece extends JPanel {
 				colorB = 41;
 			if(colorB>202)
 				colorB = 202;
-			moveSquare(startX-6, startY-32-(10*(num-1)), g);
+			moveSquare(startX-6, startY-32-(10*(num-1)), g);*/
 		}
 	}
 	public boolean equals(PlacePiece p) {
