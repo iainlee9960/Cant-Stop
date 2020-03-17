@@ -57,6 +57,9 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		// TODO PUT CODE HERE TO RUN WHEN STOP BUTTON PRESSED
 		if(game.getCurrentPlayer().isHuman()) {
 			makingchoice = false;
+			//shiftPreviousPieces(); //uses new drawPieces
+			//updatePieceArray(false, true); //uses new drawPieces
+			//updatePieceArray(false, false); //uses new drawPieces
 			game.afterStopPressed();
 		}
 		this.repaint();
@@ -76,15 +79,68 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		// TODO PUT CODE HERE TO RUN WHEN DONE BUTTON PRESSED
 		if(game.getCurrentPlayer().isHuman()) {
 			makingchoice = false;
+			//updatePieceArray(false, true); //uses new drawPieces
 			game.afterDonePressed(mostRecentChoice());
+			//updatePieceArray(true, false); //uses new drawPieces
 		}
 		this.repaint();
+	}
+	private void shiftPreviousPieces() {
+		int[] locations = game.getCurrentRecord().getNeutralMarkerLocations();
+		Color current = game.getCurrentPlayer().getPlayerColor();
+		for(int i=0; i<locations.length; i++) {
+			if(locations[i]>0) {
+				for(int j=0; j<locations[i]; j++) {
+					for(int k=0; k<4; k++) {
+						if(Pieces[i][j][k]!=null && Pieces[i][j][k].getColor()==current) {
+							System.out.println(i+" "+j+" "+k);
+							System.out.println(current);
+							Pieces[i][j][k] = null;
+							for(int y=0; y<3-k; y++) {
+								if(Pieces[i][j][k+y+1]!=null) {
+									Pieces[i][j][k+y] = Pieces[i][j][k+y+1];
+									Pieces[i][j][k+y].subtractStack();
+									Pieces[i][j][k+y+1]=null;
+								}
+							}
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	private void updatePieceArray(boolean neutralPiece, boolean bust) {
+		int[] locations = game.getCurrentRecord().getNeutralMarkerLocations();
+		Color current = game.getCurrentPlayer().getPlayerColor();
+		for(int i=0; i<locations.length; i++) {
+			if(locations[i]>0) {
+				for(int j=0; j<4; j++) {
+					if(Pieces[i][locations[i]-1][j]==null && !bust) {
+						if(neutralPiece) {
+							Pieces[i][locations[i]-1][j] = new PlacePiece(Color.WHITE, i+2, locations[i], j+1);
+							break;
+						} else {
+							if(current == Color.orange) {
+								Pieces[i][locations[i]-1][j] = new PlacePiece(new Color(255,120,0), i+2, locations[i], j+1);
+							} else {
+								Pieces[i][locations[i]-1][j] = new PlacePiece(current, i+2, locations[i], j+1);
+							}
+							break;
+						}
+					} else if(bust && Pieces[i][locations[i]-1][j]!=null && Pieces[i][locations[i]-1][j].getColor()==Color.WHITE) {
+						Pieces[i][locations[i]-1][j] = null;
+					} 
+				}
+			}
+		}
 	}
 
 	private void handlebust() {
 		//TODO PUT CODE HERE TO RUN WHEN PLAYER PRESSES TO CONTINUE AFTER THEY ROLL AND HAVE NO MOVES
 		if(game.getCurrentPlayer().isHuman()) {
 			makingchoice = false;
+			//updatePieceArray(false, true); //uses new drawPieces
 			game.resetForNewTurn();
 		}
 		this.repaint();
@@ -114,6 +170,29 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 	private boolean stopStep = false;
 	private void handleAIMove() {
 		if(isFast()) {
+			/*boolean bust = false;
+			boolean toContinue = true;
+			while (toContinue) {
+				game.dice = CantStopGame.roll();
+				choices = game.generateChoices(game.dice);
+				if (choices.length>0) {
+					int choiceNum = game.getCurrentPlayer().chooseDice(game, game.dice, game.choices);
+					game.afterDonePressed(choiceNum);
+					toContinue = game.getCurrentPlayer().rollAgain(game);
+				} else {
+					game.getCurrentRecord().removeNeutralMarkers();
+					toContinue = false;
+					bust = true;
+				}
+			}
+			if(!bust) {
+				shiftPreviousPieces();
+				updatePieceArray(false, true);
+				updatePieceArray(false, false);
+				game.endTurnWithoutBust();
+			}
+			game.resetForNewTurn();*/
+			makingchoice = false;
 			game.runAITurn();
 		} else {
 			if(!makingchoice) {
@@ -124,12 +203,15 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			} else if(choices!=null && choices.length==0) {
 				makingchoice = false;
 				chooseStep = false;
+				//updatePieceArray(false, true); //uses new drawPieces
 				game.resetForNewTurn();
 			} else {
 				if(chooseStep) {
 					choices = game.choices;
 					mostrecentchoice = game.getCurrentPlayer().chooseDice(game, game.dice, choices);
+					//updatePieceArray(false, true); //uses new drawPieces
 					game.afterDonePressed(mostRecentChoice());
+					//updatePieceArray(true, false); //uses new drawPieces
 					chooseStep = false;
 					stopStep = true;
 				} else if(stopStep) {
@@ -142,6 +224,9 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 						makingchoice = false;
 						chooseStep = false;
 						stopStep = false;
+						//shiftPreviousPieces(); //uses new drawPieces
+						//updatePieceArray(false, true); //uses new drawPieces
+						//updatePieceArray(false, false); //uses new drawPieces
 						game.afterStopPressed();
 					}
 				}
@@ -324,10 +409,71 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 			g2d.drawString("WINS", 540, 590);
 		}
 	}
+	PlacePiece[][][] Pieces={{{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null},{null,null,null,null}},
+							{{null,null,null,null},{null,null,null,null},{null,null,null,null}}};
+	private void drawPieces(Graphics g2d, boolean real) {
+		for(int i=0; i<11; i++) {
+			int rowLength = Pieces[i].length;
+			for(int j=rowLength-1; j>=0; j--) {
+				for(int y=0; y<4; y++) {
+					if(Pieces[i][j][y]!=null) {
+						Pieces[i][j][y].draw(g2d);
+					}
+				}
+			}
+		}
+		for(int i=0; i<game.getNumPlayers(); i++) {
+			for(int y=0; y<3; y++) {
+				if(game.getPlayer(i).getPlayerColor()==Color.orange) {
+					new PlacePiece(new Color(255,120,0), 13+i, y+1, 1, true, g2d);
+				} else {
+					new PlacePiece(game.getPlayer(i).getPlayerColor(), 13+i, y+1, 1, true, g2d);
+				}
+			}
+		}
+	}
 	private void drawPieces(Graphics g2d) {
 		ArrayList<PlacePiece> pieces = new ArrayList<PlacePiece>();
 		for(int i=0; i<game.getNumPlayers(); i++) {
 			int[] locations = game.getPlayer(i).getRecord().getPieceLocations();
+			//test 
+			/*for(int j=0; j<locations.length; j++) {
+				if(locations[j]>0) {
+					PlacePiece temp = new PlacePiece(game.getPlayer(i).getPlayerColor(), j+2, locations[j], 1, false, g2d);
+					int numStack = 1, index = 0, set = 9;
+					for(PlacePiece piece: pieces) {
+						if(temp.equals(piece)) {
+							set = index;
+							numStack++;
+						}
+						index++;
+					}
+					if(game.getPlayer(i).getPlayerColor()==Color.orange) {
+						if(numStack>1) {
+							pieces.add(set+2-numStack, new PlacePiece(new Color(255,120,0), j+2, locations[j], numStack, false, g2d));
+						} else {
+							pieces.add(new PlacePiece(new Color(255,120,0), j+2, locations[j], numStack, false, g2d));
+						}
+					} else {
+						if(numStack>1) {
+							pieces.add(set+2-numStack, new PlacePiece(game.getPlayer(i).getPlayerColor(), j+2, locations[j], numStack, false, g2d));
+						} else {
+							pieces.add(new PlacePiece(game.getPlayer(i).getPlayerColor(), j+2, locations[j], numStack, false, g2d));
+						}
+					}
+				}
+			}*/
+			//test
+			
 			for(int j=0; j<locations.length; j++) {
 				if(locations[j]>0) {
 					PlacePiece temp = new PlacePiece(game.getPlayer(i).getPlayerColor(), j+2, locations[j], 1, false, g2d);
@@ -345,7 +491,8 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 				}
 			}
 		}
-		int[] whitePieces = game.getPlayerOrder()[game.getCurrentPlayerIndex()].getRecord().getNeutralMarkerLocations();
+		
+		int[] whitePieces = game.getCurrentRecord().getNeutralMarkerLocations();
 		for(int i=0; i<whitePieces.length; i++) {
 			if(whitePieces[i]>0) {
 				PlacePiece temp = new PlacePiece(Color.white, i+2, whitePieces[i], 1, false, g2d);
@@ -358,6 +505,29 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 				pieces.add(new PlacePiece(Color.white, i+2, whitePieces[i], numStack, true, g2d));
 			}
 		}
+		//test
+		/*for(int i=0; i<whitePieces.length; i++) {
+			if(whitePieces[i]>0) {
+				PlacePiece temp = new PlacePiece(Color.white, i+2, whitePieces[i], 1, false, g2d);
+				int numStack = 1, index = 0, set = 9;
+				for(PlacePiece piece: pieces) {
+					if(temp.equals(piece)) {
+						set = index;
+						numStack++;
+					}
+					index++;
+				}
+				if(numStack>1) {
+					pieces.add(set+2-numStack, new PlacePiece(Color.white, i+2, whitePieces[i], numStack, false, g2d));
+				} else {
+					pieces.add(new PlacePiece(Color.white, i+2, whitePieces[i], numStack, false, g2d));
+				}
+			}
+		}
+		for(int i=pieces.size()-1; i>=0; i--) {
+			pieces.get(i).draw(g2d);
+		}*/
+		//test
 		for(int i=0; i<game.getNumPlayers(); i++) {
 			for(int y=0; y<3; y++) {
 				if(game.getPlayer(i).getPlayerColor()==Color.orange) {

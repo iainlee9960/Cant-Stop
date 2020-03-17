@@ -54,6 +54,9 @@ class PlacePiece extends JPanel {
 	public Color getColor() {
 		return assignColor;
 	}
+	public void subtractStack() {
+		stackNum--;
+	}
 	public void draw(Graphics g) {
 		int startX = xCoord[x-2][y-1];
 		int startY = yCoord[x-2][y-1];

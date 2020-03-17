@@ -113,10 +113,10 @@ public class CantStopGame {
 			ranDice[i] = (int)(Math.random()*6)+1; 
 			//control dice
 			/*switch(i) {
-			case 0:	ranDice[i] = 6; break;
-			case 1: ranDice[i] = 6; break;
+			case 0:	ranDice[i] = 3; break;
+			case 1: ranDice[i] = 4; break;
 			case 2: ranDice[i] = 6; break;
-			case 3: ranDice[i] = 6; break;
+			case 3: ranDice[i] = 2; break;
 			}*/
 		}
 		return ranDice;
@@ -127,7 +127,7 @@ public class CantStopGame {
 		//Asks the player whether they want to continue rolling (if not already busted) and repeat the process until the player declines or busts. 
 		//signal that dice should be drawn
 		//public methods in this class to access whether there is currently a choice to be made
-		boolean busted = false;
+		boolean bust = false;
 		boolean toContinue = true;
 		while (toContinue) {
 			dice = roll();
@@ -141,10 +141,10 @@ public class CantStopGame {
 				getCurrentRecord().removeNeutralMarkers();
 				//signal that showBust should be called
 				toContinue = false;
-				busted = true;
+				bust = true;
 			}
 		}
-		if(!busted) {
+		if(!bust) {
 			endTurnWithoutBust();
 		}
 		resetForNewTurn();
@@ -161,18 +161,18 @@ public class CantStopGame {
 		}
 	}
 	public void afterDonePressed(int choice) {
-		int[] locations = getPlayerOrder()[getCurrentPlayerIndex()].getRecord().getNeutralMarkerLocations();
+		int[] locations = getCurrentRecord().getNeutralMarkerLocations();
 		if(choices!=null) {
 			for(int i=0; i<choices[choice].length; i++) {
 				if(locations[choices[choice][i]-2]==0) {
-					int current = getPlayerOrder()[getCurrentPlayerIndex()].getRecord().getPieceLocations()[choices[choice][i]-2];
+					int current = getCurrentRecord().getPieceLocations()[choices[choice][i]-2];
 					locations[choices[choice][i]-2] = current+1;
 				} else {
 					locations[choices[choice][i]-2]++;
 				}
 			}
 		}
-		getPlayerOrder()[getCurrentPlayerIndex()].getRecord().setNeutralLocations(locations);
+		getCurrentRecord().setNeutralLocations(locations);
 	}
 	public void afterChoosePressed () {
 		//graphics method repaints for neutral marker and shows roll and stop buttons, disables choice panel
@@ -260,6 +260,14 @@ public class CantStopGame {
 						returnVal[current][0] = sum2;
 						current++;
 					}
+				} else if(canPlace(sum)){
+					returnVal[current] = new int[1];
+					returnVal[current][0] = sum;
+					current++;
+				} else if(canPlace(sum2)) {
+					returnVal[current] = new int[1];
+					returnVal[current][0] = sum2;
+					current++;
 				}
 			} else if (canPlace(sum)) {
 				if (canPlace(sum2)) {
