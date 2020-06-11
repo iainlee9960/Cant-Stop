@@ -34,7 +34,6 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 	private boolean AIExist = false;
 	private CantStopGame game;
 	Run screen;
-	
 	public CantStopGameScreen(boolean AIComparison, CantStopGame newGame, Run screen) {
 		this.screen = screen;
 		AIExist = AIComparison;
