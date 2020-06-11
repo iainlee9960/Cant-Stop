@@ -343,7 +343,7 @@ public class CantStopGameScreen extends JPanel implements MouseListener {
 		}
 		drawAIRadioButtons(g2d);
 		drawDice(g2d);
-		drawPieces(g2d);
+		drawPieces(g2d, true);
 		drawWinnerScreen(g2d);
 		drawQuitConfirmScreen(g2d);
 	}
