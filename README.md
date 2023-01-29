@@ -1,3 +1,3 @@
 # Cant-Stop
 
-Java implementation of the board game Can't Stop board game.
+Java implementation of the board game Can't Stop.
